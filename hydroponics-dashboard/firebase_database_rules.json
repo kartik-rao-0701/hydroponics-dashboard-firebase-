@@ -1,0 +1,47 @@
+{
+  "rules": {
+    "hydroponics": {
+      "nodes": {
+        "$nodeId": {
+          "readings": {
+            ".write": "auth != null || root.child('system/api_keys').hasChild($nodeId)",
+            ".read": true,
+            "$readingId": {
+              ".validate": "newData.hasChildren(['timestamp', 'temperature', 'humidity', 'ph_value'])"
+            }
+          },
+          "status": {
+            ".write": "auth != null || root.child('system/api_keys').hasChild($nodeId)",
+            ".read": true
+          },
+          "controls": {
+            ".write": "auth != null",
+            ".read": true
+          }
+        }
+      },
+      "alerts": {
+        ".write": "auth != null || root.child('system/api_keys').exists()",
+        ".read": true,
+        "$alertId": {
+          ".validate": "newData.hasChildren(['type', 'message', 'severity', 'timestamp'])"
+        }
+      },
+      "system": {
+        "heartbeat": {
+          ".write": "auth != null || root.child('system/api_keys').exists()",
+          ".read": true
+        },
+        "events": {
+          ".write": "auth != null || root.child('system/api_keys').exists()",
+          ".read": true
+        },
+        "api_keys": {
+          ".read": false,
+          ".write": "auth != null && auth.uid == 'admin'"
+        }
+      }
+    }
+  }
+}
+
